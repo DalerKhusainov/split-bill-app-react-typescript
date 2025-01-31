@@ -1,12 +1,5 @@
 import { FriendType } from "../types/friendsListType";
-
-// interface FriendProps {
-//   id: string;
-//   name: string;
-//   image: string;
-//   balance: number;
-// }
-
+import Button from "./Button";
 interface FriendProps {
   friend: FriendType;
 }
@@ -35,7 +28,7 @@ export default function Friend({ friend }: FriendProps) {
 
       {balance === 0 && <p>You and {name} are even.</p>}
 
-      <button className="button">Select</button>
+      <Button>Select</Button>
     </li>
   );
 }
