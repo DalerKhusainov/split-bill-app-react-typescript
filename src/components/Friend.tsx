@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { FriendType } from "../types/friendsListType";
 import Button from "./Button";
+import { FriendsListContext } from "../context/friensListContext";
 interface FriendProps {
   friend: FriendType;
 }
@@ -7,10 +9,20 @@ interface FriendProps {
 export default function Friend({ friend }: FriendProps) {
   const { id, name, image, balance } = friend;
 
-  console.log(id);
+  const friendsListContext = useContext(FriendsListContext);
+  if (!friendsListContext) return;
+  const { setSelectedFriend, selectedFriend, setOpenFriendModal } =
+    friendsListContext;
+
+  function onSelectionHandler() {
+    setSelectedFriend((selected) => (selected?.id === id ? null : friend));
+    setOpenFriendModal(false);
+  }
+
+  const isSelected = selectedFriend?.id === id;
 
   return (
-    <li>
+    <li className={isSelected ? "selected" : ""}>
       <img src={image} alt={name} />
       <h3>{name}</h3>
 
@@ -28,7 +40,9 @@ export default function Friend({ friend }: FriendProps) {
 
       {balance === 0 && <p>You and {name} are even.</p>}
 
-      <Button>Select</Button>
+      <Button clickHandler={onSelectionHandler}>
+        {isSelected ? "Close" : "Select"}
+      </Button>
     </li>
   );
 }
