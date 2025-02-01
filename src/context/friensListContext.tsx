@@ -32,10 +32,18 @@ interface FriendsListContextType {
   friends: FriendsListType;
   openFriendModal: boolean;
   selectedFriend: null | FriendType;
+  bill: number;
+  paidByUser: number;
+  whoIsPaying: string;
+  paidByFriend: number;
   setFriends: Dispatch<SetStateAction<FriendsListType>>;
   setOpenFriendModal: Dispatch<SetStateAction<boolean>>;
   setSelectedFriend: Dispatch<SetStateAction<null | FriendType>>;
+  setBill: Dispatch<SetStateAction<number>>;
+  setPaidByUser: Dispatch<SetStateAction<number>>;
+  setWhoIsPaying: Dispatch<SetStateAction<string>>;
   onAddFriendHandler: (friend: FriendType) => void;
+  splitBillHandler: (value: number) => void;
 }
 
 export const FriendsListContext = createContext<
@@ -52,9 +60,24 @@ export default function FriendsListProvider({
   const [friends, setFriends] = useState<FriendsListType>(initialFriends);
   const [openFriendModal, setOpenFriendModal] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<null | FriendType>(null);
+  const [bill, setBill] = useState<number>(0);
+  const [paidByUser, setPaidByUser] = useState<number>(0);
+  const [whoIsPaying, setWhoIsPaying] = useState<string>("user");
+
+  const paidByFriend = bill ? Number(bill) - Number(paidByUser) : 0;
 
   function onAddFriendHandler(friend: FriendType) {
     setFriends((friends) => [...friends, friend]);
+  }
+
+  function splitBillHandler(value: number) {
+    setFriends((friends) =>
+      friends.map((friend) =>
+        friend.id === selectedFriend?.id
+          ? { ...friend, balance: friend.balance + value }
+          : friend
+      )
+    );
   }
 
   return (
@@ -67,6 +90,14 @@ export default function FriendsListProvider({
         setOpenFriendModal,
         selectedFriend,
         setSelectedFriend,
+        bill,
+        setBill,
+        whoIsPaying,
+        setWhoIsPaying,
+        paidByUser,
+        setPaidByUser,
+        paidByFriend,
+        splitBillHandler,
       }}
     >
       {children}

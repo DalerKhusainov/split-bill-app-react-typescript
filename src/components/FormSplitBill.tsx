@@ -1,20 +1,35 @@
-import { useContext, useState } from "react";
+import { FormEvent, useContext } from "react";
 import { FriendsListContext } from "../context/friensListContext";
 import Button from "./Button";
 
 export default function FormSplitBill() {
-  const [bill, setBill] = useState<number>(0);
-  const [paidByUser, setPaidByUser] = useState<number>(0);
-  const [whoIsPaying, setWhoIsPaying] = useState("user");
-
-  const paidByFriend = bill ? Number(bill) - Number(paidByUser) : "";
-
   const friendsListContext = useContext(FriendsListContext);
   if (!friendsListContext) return;
-  const { selectedFriend } = friendsListContext;
+  const {
+    selectedFriend,
+    setSelectedFriend,
+    bill,
+    setBill,
+    whoIsPaying,
+    setWhoIsPaying,
+    paidByUser,
+    setPaidByUser,
+    paidByFriend,
+    splitBillHandler,
+  } = friendsListContext;
+
+  function onSubmitHandler(e: FormEvent) {
+    e.preventDefault();
+
+    if (!bill || !paidByUser) return;
+
+    splitBillHandler(whoIsPaying === "user" ? paidByFriend : -paidByUser);
+
+    setSelectedFriend(null);
+  }
 
   return (
-    <form className="form-split-bill">
+    <form className="form-split-bill" onSubmit={onSubmitHandler}>
       <h2>Split a bill with {selectedFriend?.name}</h2>
 
       <label htmlFor="">💰 Bill value</label>
@@ -53,7 +68,7 @@ export default function FormSplitBill() {
         <option value="friend">{selectedFriend?.name}</option>
       </select>
 
-      <Button clickHandler={() => console.log("Clicked")}>Split bill</Button>
+      <Button>Split bill</Button>
     </form>
   );
 }

@@ -11,12 +11,21 @@ export default function Friend({ friend }: FriendProps) {
 
   const friendsListContext = useContext(FriendsListContext);
   if (!friendsListContext) return;
-  const { setSelectedFriend, selectedFriend, setOpenFriendModal } =
-    friendsListContext;
+  const {
+    setSelectedFriend,
+    selectedFriend,
+    setOpenFriendModal,
+    setBill,
+    setPaidByUser,
+    setWhoIsPaying,
+  } = friendsListContext;
 
   function onSelectionHandler() {
     setSelectedFriend((selected) => (selected?.id === id ? null : friend));
     setOpenFriendModal(false);
+    setBill(0);
+    setPaidByUser(0);
+    setWhoIsPaying("user");
   }
 
   const isSelected = selectedFriend?.id === id;
