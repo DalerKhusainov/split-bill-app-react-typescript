@@ -27,7 +27,7 @@ function App() {
           {openFriendModal ? "Close" : "Add friend"}
         </Button>
       </div>
-      {selectedFriend && <FormSplitBill />}
+      {selectedFriend && <FormSplitBill key={selectedFriend.id} />}
     </div>
   );
 }
